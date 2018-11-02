@@ -19,10 +19,10 @@ public:
 	int GetImageHeight() { return imgH; }	// Returns the image height...
 
 	// Image constants
-	static const int REF_IMG_W = 36;
-	static const int REF_IMG_H = 49;
-	static const int LARGE_IMG_W = 1024;
-	static const int LARGE_IMG_H = 768;
+	static const int REF_IMG_W = 36;		// Wally imagae width
+	static const int REF_IMG_H = 49;		// Wally image height
+	static const int LARGE_IMG_W = 1024;	// Cluttered image width
+	static const int LARGE_IMG_H = 768;		// Cluttered image height
 
 protected:
 	int imgW;	// Width of image

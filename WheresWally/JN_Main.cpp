@@ -3,14 +3,11 @@
 
 #include "stdafx.h"
 
+#include "JN_Main.h"
 #include "ReadWriteFunctions.h"
-
-#include "JN_ReferenceImage.h"
-#include "JN_MatchInfo.h"
 
 #include <iostream>
 #include <ctime>
-#include <vector>
 #include <string>
 #include <algorithm>
 
@@ -19,7 +16,7 @@ LO1:	1st
 LO2:	1st
 LO3:	N/A
 
-Best Time: 108s
+Best Time: 108s | 45s
 
 TODO:
 	Virtual methods, matrix operator overloads & commenting
@@ -33,33 +30,34 @@ void StartImageSearch(JN_LargeImage *largeImg, JN_ReferenceImage *refImg, int n)
 {
 	std::cout << "Started image search";
 
-	std::vector<JN_MatchInfo> matchInfos;	// Create vector to store the most likely wally locations
-	time_t now = time(0);					// Gets current time (from ctime)
-
-	int maxX = largeImg->GetImageWidth()  - refImg->GetImageWidth();
-	int maxY = largeImg->GetImageHeight() - refImg->GetImageHeight();
-
-	float percent = 0.0f;
-
-	int y;
+	std::vector<JN_MatchInfo> *matchInfos = new std::vector<JN_MatchInfo>;	// Create vector to store the most likely wally locations
+	time_t now = time(0);													// Gets current time (from ctime)
+	int maxX = largeImg->GetImageWidth()  - refImg->GetImageWidth();		// The max X value, used for the loop and the progress report
+	int maxY = largeImg->GetImageHeight() - refImg->GetImageHeight();		// The max Y value, used for the loop and the progress report
+	int percent = 0;	// Search percent complete
+	int y = 0;			// Declaration needed to be outside the y loop scope so could use it in the x loop
+	double variance;	// Will store the variance of the current image being looked at
 
 	for  (int x = 0; x < maxX; x++)
 	{
 		for (y = 0; y < maxY; y++)
 		{
 			// The smaller the value, the better the match
-			double variance = refImg->CompareImage(x, y, largeImg, (matchInfos.size() == n ? matchInfos[n - 1].variance : -1.0f));
+			variance = refImg->CompareImage(x, y, largeImg, (matchInfos->size() == n ? matchInfos->at(n - 1).variance : -1.0f));
 
+			// If the variance is worse than the existing worse, then just ignore it
 			if (variance == -1)
 				continue;
 
-			matchInfos.insert(matchInfos.end(), JN_MatchInfo(x, y, variance));
+			// Insert the new variance into the vector
+			matchInfos->insert(matchInfos->end(), JN_MatchInfo(x, y, variance));
 
 			// Cast: Removes the warning (Very annoying)
-			if (matchInfos.size() > (unsigned int)n)
+			if (matchInfos->size() > (unsigned int)n)
 			{
-				std::sort(matchInfos.begin(), matchInfos.end());	// Sorts ascending (best - worst)
-				matchInfos.erase(matchInfos.end() - 1);				// Remove the worst match
+				// Sort the vector so i can remove the worst variance
+				std::sort(matchInfos->begin(), matchInfos->end());	// Sorts ascending (best - worst)
+				matchInfos->erase(matchInfos->end() - 1);				// Remove the worst match
 			}
 		}
 
@@ -67,40 +65,54 @@ void StartImageSearch(JN_LargeImage *largeImg, JN_ReferenceImage *refImg, int n)
 		float p = (float)x * y / (maxX * (float)maxY) * 100.0f;
 		if (x > 0 && p >= percent + 5)
 		{
-			percent = floor(p);
+			percent = (int)floor(p);
 			std::system("cls");	// Will only work on windows
-			std::cout << "Search Progress: " << percent << "%";
+			std::cout << "Search Progress: " << percent << "%\n";
 		}
 	}
 
-	std::system("cls");
+	std::system("cls");																// Will only work on windows
+	std::cout << "Finished the image search in " << (time(0) - now) << "s\n\n";		// Output the search time
 
-	std::cout << std::endl;
-	std::cout << "Finished the image search in " << (time(0) - now) << "s\n\n";
+	OutputImageSearchResults(largeImg, refImg, matchInfos);
+}
 
+void OutputImageSearchResults(JN_LargeImage *largeImg, JN_ReferenceImage *refImg, std::vector<JN_MatchInfo> *matchInfos)
+{
 	bool flag;
-	for (int i = 0; i < fmin(n, matchInfos.size()); i++)
+
+	// Unsigned to remove warning
+	for (unsigned int i = 0; i < matchInfos->size(); i++)
 	{
-		largeImg->CreateBorderAround(matchInfos[i].xOffset, matchInfos[i].yOffset, JN_BaseImage::REF_IMG_W, JN_BaseImage::REF_IMG_H, 2, 0);
+		// Highlights wally match
+		largeImg->CreateBorderAround(matchInfos->at(i).xOffset, matchInfos->at(i).yOffset, JN_BaseImage::REF_IMG_W, JN_BaseImage::REF_IMG_H, 2, 0);
 
 		if (i == 0)
 		{
-			std::cout << "Wally: " << "(" << matchInfos[i].xOffset << ", " << matchInfos[i].yOffset << ")\n";
+			// First in the vector is always the best wally match
+			std::cout << "Wally: " << "(" << matchInfos->at(i).xOffset << ", " << matchInfos->at(i).yOffset << ")\n";
+			// Just wally in this image
 			WritePGM("Files/FoundWally.pgm", largeImg->GetImage(), JN_BaseImage::LARGE_IMG_W, JN_BaseImage::LARGE_IMG_H, 255, flag);
 			continue;
 		}
 
-		std::cout << "Match #" << i << " (" << matchInfos[i].xOffset << ", " << matchInfos[i].yOffset << ")\n";
+		std::cout << "Match #" << i << " (" << matchInfos->at(i).xOffset << ", " << matchInfos->at(i).yOffset << ")\n";
 	}
 
+	// Write all of the matches to this file
 	WritePGM("Files/BestMatchs.pgm", largeImg->GetImage(), JN_BaseImage::LARGE_IMG_W, JN_BaseImage::LARGE_IMG_H, 255, flag);
 
 	std::cout << std::endl;
 
-	if (!flag)
+	if (!flag)	// Error flag
 		std::cout << "Files could not be saved\n";
+	else
+		std::cout << "Files saved at\n\tFiles/FoundWally.pgm\n\tFiles/BestMatches.pgm\n\n";
 
-	std::cout << "\n- - - Program End - - -\n";
+
+	delete matchInfos;
+
+	std::cout << "- - - Program End - - -\n";
 }
 
 
@@ -151,8 +163,7 @@ int main()
 	std::cout << "Looking for " << n << " match(s)\n";
 
 	StartImageSearch(largeImage, refImage, n);	// Start the image search process
-
-	std::cin.get();							// Pause program so output can be seen
+	std::cin.get();								// Pause program so output can be seen
 
 	return 0;
 }

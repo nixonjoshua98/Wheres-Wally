@@ -1,12 +1,13 @@
-
-
-
 #include "stdafx.h"
 
 #include "ReadWriteFunctions.h"
 
 #include <fstream>
-#include <iostream>
+
+/*
+Code was provided by the University (the .h file was not)
+I modified the paramaters and renamed variables
+*/
 
 double* ReadText(char *fileName, int matrixWidth, int matrixHeight, bool &flag)
 {
@@ -15,21 +16,21 @@ double* ReadText(char *fileName, int matrixWidth, int matrixHeight, bool &flag)
 	int i = 0;
 	std::ifstream f(fileName);
 
-	if (f.is_open())
+	if (f.is_open()) // File has been opened OK
 	{
+		// While file is open and accessible
 		while (f.good())
 		{
-			if (i > matrixHeight * matrixWidth - 1) break;
-			f >> *(data + i);
+			if (i > matrixHeight * matrixWidth - 1)
+				break;	// array has ended
+			f >> *(data + i);	// Write to the file
 			i++;
 		}
 		f.close();
 	}
 	else
-	{
-		std::cout << "File not opened Z\n";
 		flag = false;
-	}
+
 	return data;
 }
 
@@ -49,15 +50,14 @@ void WritePGM(char *fileName, double *data, int matrixWidth, int matrixHeight, i
 	f.open(fileName, std::ios::out | std::ios::binary | std::ios::trunc);
 
 	if (!f.is_open())
-	{
-		delete[] image;
 		flag = false;
-	}
 
+	// Writes the needed headers for the image file
 	f << "P5" << std::endl << matrixWidth << " " << matrixHeight << std::endl << Q << std::endl;
 
 	f.write(reinterpret_cast<char *>(image), (matrixWidth * matrixHeight) * sizeof(unsigned char));
 
+	// Image failed to be written to
 	if (f.fail())
 		flag = false;
 

@@ -1,10 +1,5 @@
-
-
-
 #include "stdafx.h"
 #include "JN_ReferenceImage.h"
-
-#include <iostream>
 
 JN_ReferenceImage::JN_ReferenceImage()
 {
@@ -21,6 +16,8 @@ JN_ReferenceImage::~JN_ReferenceImage()
 	// Deconstructor
 }
 
+
+// Compares a matrix to another matrix
 double JN_ReferenceImage::CompareImage(int offsetX, int offsetY, JN_LargeImage *compareTo, double worstBestVariance)
 {
 	double difference = 0.0f;
@@ -32,9 +29,14 @@ double JN_ReferenceImage::CompareImage(int offsetX, int offsetY, JN_LargeImage *
 			double ref = GetIndex(x, y);
 			double lrg = compareTo->GetIndex(x + offsetX, y + offsetY);
 
+			// Grab the difference between pixels
 			if (ref < 255)	// Ignore white spots (Makes the result biased)
+				// Needed a large number to show the difference, squaring it increased the gap reducing close differences
 				difference += (lrg - ref) * (lrg - ref);
 
+
+			// This line dropped my runtime to half
+			// If the current variance is already worst than the existing worst then it can be stopped as it doesn't matter
 			if (worstBestVariance > -1.0f && difference >= worstBestVariance)
 				return -1;
 		}

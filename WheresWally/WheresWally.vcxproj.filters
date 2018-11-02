@@ -45,6 +45,9 @@
     <ClInclude Include="JN_MatchInfo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="JN_Main.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="JN_Main.cpp">

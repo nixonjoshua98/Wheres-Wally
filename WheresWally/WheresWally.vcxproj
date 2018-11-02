@@ -149,6 +149,7 @@
   <ItemGroup>
     <ClInclude Include="JN_BaseImage.h" />
     <ClInclude Include="JN_LargeImage.h" />
+    <ClInclude Include="JN_Main.h" />
     <ClInclude Include="JN_MatchInfo.h" />
     <ClInclude Include="JN_Matrix.h" />
     <ClInclude Include="JN_ReferenceImage.h" />

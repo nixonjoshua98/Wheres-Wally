@@ -16,9 +16,9 @@ public:
 	double* GetContainer();						// Returns the whole matrix
 
 private:
-	int width;
-	int height;
-	double *container = NULL;
+	int width;					// ...
+	int height;					// The height
+	double *container = NULL;	// The internal structure
 };
 
 #endif // !JN_MATRIX_H
