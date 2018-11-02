@@ -21,9 +21,9 @@ JN_ReferenceImage::~JN_ReferenceImage()
 	// Deconstructor
 }
 
-float JN_ReferenceImage::CompareImage(int offsetX, int offsetY, JN_LargeImage *compareTo)
+double JN_ReferenceImage::CompareImage(int offsetX, int offsetY, JN_LargeImage *compareTo, double worstBestVariance)
 {
-	float difference = 0.0f;
+	double difference = 0.0f;
 
 	for (int x = 0; x < imgH; x++)
 	{
@@ -34,6 +34,9 @@ float JN_ReferenceImage::CompareImage(int offsetX, int offsetY, JN_LargeImage *c
 
 			if (ref < 255)	// Ignore white spots (Makes the result biased)
 				difference += (lrg - ref) * (lrg - ref);
+
+			if (worstBestVariance > -1.0f && difference >= worstBestVariance)
+				return -1;
 		}
 	}
 

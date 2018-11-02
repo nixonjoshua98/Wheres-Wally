@@ -4,7 +4,7 @@
 struct JN_MatchInfo
 {
 public:
-	JN_MatchInfo(int xOffset, int yOffset, float variance)
+	JN_MatchInfo(int xOffset, int yOffset, double variance)
 	{
 		this->xOffset = xOffset;
 		this->yOffset = yOffset;
@@ -14,7 +14,7 @@ public:
 public:
 	int xOffset;
 	int yOffset;
-	float variance;
+	double variance;
 
 	// Overloading the greater than sign
 	bool operator < (const JN_MatchInfo &other)

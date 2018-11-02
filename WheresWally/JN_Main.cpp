@@ -5,7 +5,6 @@
 
 #include "ReadWriteFunctions.h"
 
-
 #include "JN_ReferenceImage.h"
 #include "JN_MatchInfo.h"
 
@@ -49,7 +48,10 @@ void StartImageSearch(JN_LargeImage *largeImg, JN_ReferenceImage *refImg, int n)
 		for (y = 0; y < maxY; y++)
 		{
 			// The smaller the value, the better the match
-			float variance = refImg->CompareImage(x, y, largeImg);
+			double variance = refImg->CompareImage(x, y, largeImg, (matchInfos.size() == n ? matchInfos[n - 1].variance : -1.0f));
+
+			if (variance == -1)
+				continue;
 
 			matchInfos.insert(matchInfos.end(), JN_MatchInfo(x, y, variance));
 
@@ -62,10 +64,10 @@ void StartImageSearch(JN_LargeImage *largeImg, JN_ReferenceImage *refImg, int n)
 		}
 
 		// Update the virtual progress bar every 5%
-		int p = (float)x * y / (maxX * (float)maxY) * 100.0f;
-		if (x > 0 && p >= percent + 5 || p >= 99)
+		float p = (float)x * y / (maxX * (float)maxY) * 100.0f;
+		if (x > 0 && p >= percent + 5)
 		{
-			percent = ceil(p);
+			percent = floor(p);
 			std::system("cls");	// Will only work on windows
 			std::cout << "Search Progress: " << percent << "%";
 		}
@@ -77,8 +79,7 @@ void StartImageSearch(JN_LargeImage *largeImg, JN_ReferenceImage *refImg, int n)
 	std::cout << "Finished the image search in " << (time(0) - now) << "s\n\n";
 
 	bool flag;
-
-	for (int i = 0; i < n; i++)
+	for (int i = 0; i < fmin(n, matchInfos.size()); i++)
 	{
 		largeImg->CreateBorderAround(matchInfos[i].xOffset, matchInfos[i].yOffset, JN_BaseImage::REF_IMG_W, JN_BaseImage::REF_IMG_H, 2, 0);
 
@@ -146,7 +147,7 @@ int main()
 
 	std::cout << "Find n number of matches (including Wally): ";
 	std::getline(std::cin, line);
-	n = fmax(1, atoi(line.c_str()));
+	n = (int)fmax(1, atoi(line.c_str()));
 	std::cout << "Looking for " << n << " match(s)\n";
 
 	StartImageSearch(largeImage, refImage, n);	// Start the image search process
