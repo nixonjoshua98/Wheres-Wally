@@ -56,6 +56,12 @@ double JN_Matrix::GetIndex(int i)
 	return container[i];
 }
 
+void JN_Matrix::SetIndex(int x, int y, double v)
+{
+	// Set value at index
+	container[x + (width * y)] = v;
+}
+
 double* JN_Matrix::GetContainer()
 {
 	return container;

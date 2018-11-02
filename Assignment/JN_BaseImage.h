@@ -12,18 +12,24 @@ public:
 
 	void SetImage(int w, int h, double *data);		// Alt to passing at constructor 
 	double* GetImage();								// Returns matrix container
-	void Output2PGM(char *fileName, bool &flag);	// Output the image to PGM
 	double GetIndex(int i);							// Return 1 pixel at index
 	double GetIndex(int x, int y);					// Return 1 pixel at index
 
-	static double* ReadTextFile(char *fileName, int w, int h, bool &flag);
-	static void Output2PGM(char *fileName, int w, int h, double *_data, bool &flag);
+	int GetImageWidth()  { return imgW; }	// Returns the image width...
+	int GetImageHeight() { return imgH; }	// Returns the image height...
 
+	// Image constants
+	static const int REF_IMG_W = 36;
+	static const int REF_IMG_H = 49;
+	static const int LARGE_IMG_W = 1024;
+	static const int LARGE_IMG_H = 768;
+
+protected:
 	int imgW;	// Width of image
 	int imgH;	// Height of image
 
 protected:
-	JN_Matrix *img;
+	JN_Matrix *img;	// Stores the image in a matrix
 };
 
 #endif // !JN_BASE_IMAGE_H

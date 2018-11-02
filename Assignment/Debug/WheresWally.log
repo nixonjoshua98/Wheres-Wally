@@ -1,0 +1,6 @@
+﻿  JN_Main.cpp
+c:\users\joshua\onedrive - university of lincoln\games computing\year two\object oriented programming (c++)\assignment\whereswally\jn_main.cpp(65): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+c:\users\joshua\onedrive - university of lincoln\games computing\year two\object oriented programming (c++)\assignment\whereswally\jn_main.cpp(68): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+c:\users\joshua\onedrive - university of lincoln\games computing\year two\object oriented programming (c++)\assignment\whereswally\jn_main.cpp(151): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+  WheresWally.vcxproj -> C:\Users\Joshua\OneDrive - University of Lincoln\Games Computing\Year Two\Object Oriented Programming (C++)\Assignment\WheresWally\Debug\WheresWally.exe
+  WheresWally.vcxproj -> C:\Users\Joshua\OneDrive - University of Lincoln\Games Computing\Year Two\Object Oriented Programming (C++)\Assignment\WheresWally\Debug\WheresWally.pdb (Partial PDB)

@@ -2,7 +2,6 @@
 
 
 #include "stdafx.h"
-#include "ReadWriteFunctions.h"
 
 #include "JN_Matrix.h"
 #include "JN_BaseImage.h"
@@ -42,20 +41,4 @@ double JN_BaseImage::GetIndex(int i)
 double JN_BaseImage::GetIndex(int x, int y)
 {
 	return img->GetIndex(x, y);
-}
-
-
-void JN_BaseImage::Output2PGM(char *fileName, bool &flag)
-{
-	WritePGM(fileName, GetImage(), imgW, imgH, 255, flag);
-}
-
-void JN_BaseImage::Output2PGM(char *fileName, int w, int h, double *_data, bool &flag)
-{
-	WritePGM(fileName, _data, w, h, 255, flag);
-}
-
-double* JN_BaseImage::ReadTextFile(char *fileName, int w, int h, bool &flag)
-{
-	return ReadText(fileName, w, h, flag);
 }

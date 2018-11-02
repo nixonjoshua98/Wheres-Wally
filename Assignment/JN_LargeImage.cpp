@@ -26,3 +26,20 @@ double* JN_LargeImage::GetSection(int offsetX, int offsetY, int w, int h)
 	}
 	return section;
 }
+
+void JN_LargeImage::SetIndex(int x, int y, double v)
+{
+	img->SetIndex(x, y, v);
+}
+
+void JN_LargeImage::CreateBorderAround(int xOffset, int yOffset, int w, int h, int thickness, double v)
+{
+	for (int x = 0; x < w; x++)
+	{
+		for (int y = 0; y < h; y++)
+		{
+			if (x < thickness || y < thickness || y + thickness >= h || x + thickness >= w)
+				SetIndex(x + xOffset, y + yOffset, v);
+		}
+	}
+}

@@ -32,7 +32,7 @@ float JN_ReferenceImage::CompareImage(int offsetX, int offsetY, JN_LargeImage *c
 			double ref = GetIndex(x, y);
 			double lrg = compareTo->GetIndex(x + offsetX, y + offsetY);
 
-			if (ref < 255)
+			if (ref < 255)	// Ignore white spots (Makes the result biased)
 				difference += (lrg - ref) * (lrg - ref);
 		}
 	}
