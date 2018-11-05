@@ -29,7 +29,9 @@ void JN_Matrix::SetData(double *data)
 {
 	// Set data to existing container
 	for (int i = 0; i < (width * height); i++)
+	{
 		container[i] = data[i];
+	}
 }
 
 void JN_Matrix::SetData(int w, int h, double *data)
@@ -37,7 +39,6 @@ void JN_Matrix::SetData(int w, int h, double *data)
 	// Resize the container and store new data
 	delete[] this->container;
 	this->container = new double[w * h];
-
 	width  = w;
 	height = h;
 	SetData(data);
@@ -63,6 +64,5 @@ void JN_Matrix::SetIndex(int x, int y, double v)
 
 double* JN_Matrix::GetContainer()
 {
-	// Return the internal structure used to store the matrix
 	return container;
 }

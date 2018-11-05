@@ -11,8 +11,8 @@ public:
 
 	double* GetSection(int offsetX, int offsetY, int w, int h);	// Get part of the image
 
-	void SetIndex(int x, int y, double v);	// Set a single pixel of the image to a value
-	void CreateBorderAround(int xOffset, int yOffset, int w, int h, int thickness, double v);	// Creates a border around a section
+	void SetIndex(int x, int y, double v);
+	void CreateBorderAround(int xOffset, int yOffset, int w, int h, int thickness, double v);
 };
 
 #endif // !JN_LARGE_IMAGE_H

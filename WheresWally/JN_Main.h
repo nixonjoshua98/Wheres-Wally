@@ -8,6 +8,6 @@
 #include <vector>
 
 void StartImageSearch(JN_LargeImage *largeImg, JN_ReferenceImage *refImg, int n);
-void OutputImageSearchResults(JN_LargeImage *largeImg, JN_ReferenceImage *refImg, std::vector<JN_MatchInfo> *matchInfos);
+//void OutputImageSearchResults(JN_LargeImage *largeImg, JN_ReferenceImage *refImg, std::vector<JN_MatchInfo> *matchInfos);
 
 #endif // !JN_MAIN_H
