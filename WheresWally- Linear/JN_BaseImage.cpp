@@ -13,7 +13,7 @@ JN_BaseImage::JN_BaseImage()
 
 JN_BaseImage::~JN_BaseImage()
 {
-	// Matrix deconstructor
+	delete[] this;
 }
 
 JN_BaseImage::JN_BaseImage(int w, int h, double *data)
@@ -41,4 +41,12 @@ double JN_BaseImage::GetIndex(int i)
 double JN_BaseImage::GetIndex(int x, int y)
 {
 	return img->GetIndex(x, y);
+}
+
+bool JN_BaseImage::Collide(int ax, int ay, int bx, int by, int w, int h)
+{
+	int leftA = ax, rightA = ax + w, topA = ay, bottomA = ay + h;
+	int leftB = bx, rightB = bx + w, topB = by, bottomB = by + h;
+
+	return !(bottomA <= topB || topA >= bottomB || rightA <= leftB || leftA >= rightB);
 }

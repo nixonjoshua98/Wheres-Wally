@@ -3,6 +3,15 @@
 
 #include "JN_Matrix.h"
 
+struct JN_Rect
+{
+	int x;
+	int y;
+	int w;
+	int h;
+};
+
+
 class JN_BaseImage
 {
 public:
@@ -15,6 +24,8 @@ public:
 	double GetIndex(int i);							// Return 1 pixel at index
 	double GetIndex(int x, int y);					// Return 1 pixel at index
 
+	static bool Collide(int ax, int ay, int bx, int by, int w, int h);
+	
 	int GetImageWidth()  { return imgW; }	// Returns the image width...
 	int GetImageHeight() { return imgH; }	// Returns the image height...
 

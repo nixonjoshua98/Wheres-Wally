@@ -27,9 +27,9 @@ double JN_ReferenceImage::CompareImage(int offsetX, int offsetY, JN_LargeImage *
 	double ref = 0.0;
 	double lrg = 0.0;
 
-	for (int y = 0; y < imgH; y++)
+	for (int y = 0; y < imgH; y += 3 )
 	{
-		for (int x = 0; x < imgW; x++)
+		for (int x = 0; x < imgW; x += 2)
 		{
 			ref = GetIndex(x, y);
 			lrg = compareTo->GetIndex(offsetX + x, offsetY + y);
