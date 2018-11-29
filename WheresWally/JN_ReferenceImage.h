@@ -11,7 +11,10 @@ public:
 	JN_ReferenceImage(int w, int h, double *data);
 	~JN_ReferenceImage();								// Deconstructor
 
-	double CompareImage(int offsetX, int offsetY, JN_LargeImage *compareTo, double worstBestVariance);
+	double SSDCompare(int offsetX, int offsetY, JN_LargeImage *compareTo, double worstBest);
+
+	bool CorrectWidth() override;
+	bool CorrectHeight() override;
 };
 
 #endif // !JN_REFERENCE_IMAGE_H

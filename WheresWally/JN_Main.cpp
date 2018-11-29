@@ -7,60 +7,63 @@
 #include "JN_Main.h"
 
 #include <iostream>
-#include <ctime>
+#include <chrono>
 #include <vector>
 #include <string>
 #include <algorithm>
 
+/*
+	PASS:	Data is passed around etc.					COMPLETE
+	2:2:	Vectors, pointers, wally is found			COMPLETE
+	2:1:	Wally is found, pass by reference etc.		COMPLETE
+	1st:	N-best list									COMPLETE
+
+	PASS:	Variables, structures						COMPLETE
+	2:2:	Inheritance									COMPLETE
+	2:1:	Acessibility								COMPLETE
+	1st:	Virtual, matrix overloading					COMPLETE
+*/
+
 void StartImageSearch(JN_LargeImage *largeImg, JN_ReferenceImage *refImg, int n)
 {
-	std::cout << "Image searching (avg. 2s) ";
+	std::cout << "Image searching";
 
-	int maxX = largeImg->GetImageWidth()  -  refImg->GetImageWidth(); maxX -= (maxX % refImg->GetImageWidth());
+	int maxX = largeImg->GetImageWidth() - refImg->GetImageWidth(); maxX -= (maxX % refImg->GetImageWidth());
 	int maxY = largeImg->GetImageHeight() - refImg->GetImageHeight(); maxY -= (maxX % refImg->GetImageHeight());
 
-	std::vector<JN_MatchInfo> matchInfos;	// Create vector to store the most likely wally locations
-	time_t now = time(0);					// Gets current time (from ctime)
+	std::vector<JN_MatchInfo> matchInfos;			// Create vector to store the most likely wally locations
+	auto start = std::chrono::system_clock::now();	// Time at start
 
-	for (int y = 0; y < maxY; y+=5)
+	for (int y = 0; y < maxY; y += 5)
 	{
-		for (int x = 0; x < maxX; x+=2)
+		for (int x = 0; x < maxX; x += 2)
 		{
 			// Will return -1 if the match was poor
-			double variance = refImg->CompareImage(x, y, largeImg, (matchInfos.size() == n ? matchInfos[n - 1].variance : -1.0f));	// The smaller the value, the better the match
+			double difference = refImg->SSDCompare(x, y, largeImg, (matchInfos.size() == n ? matchInfos[n - 1].difference : -1.0f));	// The smaller the value, the better the match
 
-			if (variance > 0)
+			if (difference > 0)
 			{
-				bool collision = false;
-				for (int i = 0; i < (int)matchInfos.size(); i++)
+				matchInfos.push_back(JN_MatchInfo(x, y, difference));	// Add the object
+
+				if ((int)matchInfos.size() > n)	// Cast: Removes the warning (Very annoying)
 				{
-					if (matchInfos.size() != 0 && JN_BaseImage::Collide(x, y, matchInfos[i].xOffset, matchInfos[i].yOffset, refImg->GetImageWidth(), refImg->GetImageHeight()))
-					{
-						break;
-						collision = true;
-					}
+					std::sort(matchInfos.begin(), matchInfos.end());	// Sorts ascending (best - worst)
+					matchInfos.pop_back();								// Remove the worst match
 				}
 
-				if (!collision)
-				{
-					matchInfos.push_back(JN_MatchInfo(x, y, variance));	// Add the object
-
-					if ((int)matchInfos.size() > n)	// Cast: Removes the warning (Very annoying)
-					{
-						std::sort(matchInfos.begin(), matchInfos.end());	// Sorts ascending (best - worst)
-						matchInfos.pop_back();								// Remove the worst match
-					}
-
-					x += refImg->GetImageWidth();
-				}
+				x += refImg->GetImageWidth();
 			}
 		}
 	}
 
-	std::cout << "OK\nFinished the image search in " << (time(0) - now) << "s\n\n";
+	auto end = std::chrono::system_clock::now();
+	std::chrono::duration<float, std::milli> span = end - start;
+
+	std::cout << "...OK\nFinished the image search in " << span.count() << "ms\n\n";
 
 	OutputImageSearchResults(largeImg, refImg, matchInfos);
 }
+
 
 void OutputImageSearchResults(JN_LargeImage *largeImg, JN_ReferenceImage *refImg, std::vector<JN_MatchInfo> matchInfos)
 {
@@ -87,8 +90,8 @@ void OutputImageSearchResults(JN_LargeImage *largeImg, JN_ReferenceImage *refImg
 		std::cout << "Files could not be saved\n";
 	else
 		std::cout << "Files\n\tFiles/FoundWally.pgm\n";
-		if (matchInfos.size() > 1)
-			std::cout << "\tFiles/BestMatches.pgm\n";
+	if (matchInfos.size() > 1)
+		std::cout << "\tFiles/BestMatches.pgm\n";
 
 	std::cout << "\n- - - Program End - - -\n";
 }
@@ -99,27 +102,28 @@ int main()
 	std::cout << "Loading images";
 
 	// Flags which will be used to check image status
-	bool refLoaded   = true;
+	bool refLoaded = true;
 	bool largeLoaded = true;
 
 
 	// Creates the two image objects
 	JN_ReferenceImage *refImage = new JN_ReferenceImage();
-	JN_LargeImage *largeImage   = new JN_LargeImage();
+	JN_LargeImage *largeImage = new JN_LargeImage();
 
 
-	// Gets current time (from ctime)
-	time_t t = time(0);
+	// Gets current time
+	auto start = std::chrono::system_clock::now();
 
 
 	// Loads the images into memory
-	double *refImgData   = ReadText(     "Files/Wally_grey.txt",   JN_BaseImage::REF_IMG_W,     JN_BaseImage::REF_IMG_H, refLoaded);
+	double *refImgData = ReadText("Files/Wally_grey.txt", JN_BaseImage::REF_IMG_W, JN_BaseImage::REF_IMG_H, refLoaded);
 	double *largeImgData = ReadText("Files/Cluttered_scene.txt", JN_BaseImage::LARGE_IMG_W, JN_BaseImage::LARGE_IMG_H, largeLoaded);
 
-	t = time(0) - t;
+	auto end = std::chrono::system_clock::now();
+	std::chrono::duration<float, std::milli> span = end - start;
 
 	// Assign the images to the relavant objects
-	refImage->SetImage(    JN_BaseImage::REF_IMG_W,   JN_BaseImage::REF_IMG_H,   refImgData);
+	refImage->SetImage(JN_BaseImage::REF_IMG_W, JN_BaseImage::REF_IMG_H, refImgData);
 	largeImage->SetImage(JN_BaseImage::LARGE_IMG_W, JN_BaseImage::LARGE_IMG_H, largeImgData);
 
 
@@ -130,20 +134,18 @@ int main()
 		return -1;
 	}
 
-	std::cout << "...Images loaded (" << t << "s)\n";
+	std::cout << "...Images loaded (" << span.count() << "ms)\n";
 
-	std::cout << "Finding 5 best matches (including Wally)\n";
-
-	/*
 	int n;
 	std::string line;
+	std::cout << "N-matches: ";
 	std::getline(std::cin, line);
 	n = (int)fmax(1, atoi(line.c_str()));
-	*/
 
-	StartImageSearch(largeImage, refImage, 5);	// Start the image search process
+	std::cout << "Finding " << n << " best matches (including Wally)\n";
+
+	StartImageSearch(largeImage, refImage, n);	// Start the image search process
 	std::cin.get();								// Pause program so output can be seen
 
 	return 0;
 }
-

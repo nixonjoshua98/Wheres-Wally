@@ -1,27 +1,32 @@
-
-
-
 #include "stdafx.h"
 #include "JN_ReferenceImage.h"
 
 #include <iostream>
 
+
+// Default constructor
 JN_ReferenceImage::JN_ReferenceImage()
 {
-	// Default constructor
+
 }
 
+
+// overload constructor
 JN_ReferenceImage::JN_ReferenceImage(int w, int h, double *data)
 {
 	JN_BaseImage::SetImage(w, h, data);
 }
 
+
+// Deconstructor
 JN_ReferenceImage::~JN_ReferenceImage()
 {
-	// Deconstructor
+
 }
 
-double JN_ReferenceImage::CompareImage(int offsetX, int offsetY, JN_LargeImage *compareTo, double worstBestVariance)
+
+// Compare two image matrix
+double JN_ReferenceImage::SSDCompare(int offsetX, int offsetY, JN_LargeImage *compareTo, double worstBest)
 {
 	double difference = 0.0;
 	double ref = 0.0;
@@ -35,12 +40,25 @@ double JN_ReferenceImage::CompareImage(int offsetX, int offsetY, JN_LargeImage *
 			lrg = compareTo->GetIndex(offsetX + x, offsetY + y);
 
 			if (ref < 255)	// Ignore white spots (Makes the result biased)
+				// Sum of squared difference
 				difference += (lrg - ref) * (lrg - ref);
 
-			if (worstBestVariance > -1.0f && difference >= worstBestVariance)
+			if (worstBest > -1.0f && difference >= worstBest)
 				return -1;
 		}
 	}
 
 	return difference;
+}
+
+
+bool JN_ReferenceImage::CorrectWidth()
+{
+	return imgW == REF_IMG_W;
+}
+
+
+bool JN_ReferenceImage::CorrectHeight()
+{
+	return imgH == REF_IMG_H;
 }

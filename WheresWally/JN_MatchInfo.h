@@ -9,36 +9,36 @@ public:
 
 	}
 
-	JN_MatchInfo(int xOffset, int yOffset, double variance)
+	JN_MatchInfo(int xOffset, int yOffset, double difference)
 	{
 		this->xOffset = xOffset;
 		this->yOffset = yOffset;
-		this-> variance = variance;
+		this->difference = difference;
 	}
 
 	// Copy constructor
 	JN_MatchInfo& JN_MatchInfo::operator = (const JN_MatchInfo& other) {
-		this->xOffset  = other.xOffset;
-		this->yOffset  = other.yOffset;
-		this->variance = other.variance;
+		this->xOffset = other.xOffset;
+		this->yOffset = other.yOffset;
+		this->difference = other.difference;
 		return *this;
 	}
 
 public:
 	int xOffset;
 	int yOffset;
-	double variance;
+	double difference;
 
 	// Overloading the greater than sign
 	bool operator < (const JN_MatchInfo &other)
 	{
-		return variance < other.variance;
+		return difference < other.difference;
 	}
 
 	// Overloading the less than sign
 	bool operator > (const JN_MatchInfo &other)
 	{
-		return variance > other.variance;
+		return difference > other.difference;
 	}
 };
 

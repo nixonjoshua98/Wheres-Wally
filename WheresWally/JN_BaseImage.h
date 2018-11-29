@@ -24,8 +24,15 @@ public:
 	double GetIndex(int i);							// Return 1 pixel at index
 	double GetIndex(int x, int y);					// Return 1 pixel at index
 
+
+	// Very useful virtual methods
+	bool virtual CorrectWidth();
+	bool virtual CorrectHeight();
+
+
 	static bool Collide(int ax, int ay, int bx, int by, int w, int h);
 	
+
 	int GetImageWidth()  { return imgW; }	// Returns the image width...
 	int GetImageHeight() { return imgH; }	// Returns the image height...
 

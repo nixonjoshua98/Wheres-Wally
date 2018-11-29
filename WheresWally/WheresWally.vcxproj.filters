@@ -13,12 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Header Files\DefaultHeaders">
-      <UniqueIdentifier>{8a4edf5a-3da6-4a7b-946b-ed5bcb3bcc89}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\DefaultSources">
-      <UniqueIdentifier>{37469522-28fa-4313-8ede-e6cd4195050d}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="JN_BaseImage.h">
@@ -33,19 +27,19 @@
     <ClInclude Include="JN_ReferenceImage.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="targetver.h">
-      <Filter>Header Files\DefaultHeaders</Filter>
-    </ClInclude>
-    <ClInclude Include="stdafx.h">
-      <Filter>Header Files\DefaultHeaders</Filter>
-    </ClInclude>
-    <ClInclude Include="ReadWriteFunctions.h">
-      <Filter>Header Files\DefaultHeaders</Filter>
-    </ClInclude>
     <ClInclude Include="JN_MatchInfo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="JN_Main.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ReadWriteFunctions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -66,10 +60,10 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="stdafx.cpp">
-      <Filter>Source Files\DefaultSources</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ReadWriteFunctions.cpp">
-      <Filter>Source Files\DefaultSources</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
